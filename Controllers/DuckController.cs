@@ -1,3 +1,4 @@
+using DuckApi.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DuckApi.Controllers
@@ -6,23 +7,37 @@ namespace DuckApi.Controllers
     [Route("[controller]")]
     public class DuckController : ControllerBase
     {
-        private static readonly string[] Ducks = new[]
-        {
-            "Mallard", "Bluebill"
-        };
-
         private readonly ILogger<DuckController> _logger;
+        private readonly DataContext _db;
 
-        public DuckController(ILogger<DuckController> logger)
+        public DuckController(ILogger<DuckController> logger, DataContext db)
         {
             _logger = logger;
+
+            _db = db;
+
         }
 
-        [HttpGet(Name = "GetDuckCall")]
-        public string Get()
+        [HttpGet(Name = "GetDuck")]
+        public Duck Get(string kind)
         {
-            _logger.LogTrace("Going quackers");
-            return "quack";
+            var duck  = _db.Ducks.Single(d => d.Name == kind);
+
+            _logger.LogTrace($"Getting quackers: {duck.Name} - {duck.Description}");
+
+            return duck;
+        }
+
+        [HttpPut(Name = "AddDuck")]
+        public Duck Put(Duck duck)
+        {
+            _logger.LogTrace($"Going quackers: {duck.Name} - {duck.Description}");
+
+            _db.Ducks.Add(duck);
+
+            _db.SaveChanges();
+
+            return duck;
         }
     }
 }
