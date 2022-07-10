@@ -16,9 +16,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("http://duckapi.azurewebsites.net",
-                              "https://localhost:4200",
-                              "http://localhost:4200");
+                          policy.AllowAnyOrigin();
+                          policy.AllowAnyHeader();
+                          policy.AllowAnyMethod();
                       });
 });
 
