@@ -19,25 +19,26 @@ namespace DuckApi.Controllers
         [HttpGet(Name = "GetDuck")]
         public ActionResult<Duck> Get(int? id, string? name, string? genus, string? species)
         {
-            Duck duck;
+            _logger.LogTrace($"Getting quackers: #{id} - Name: {name} Genus: {genus} Species: {species}");
+
             if (id != null)
             {
-                duck = _db.Ducks.Single(d => d.Id == id);
+                Duck duck = _db.Ducks.Single(d => d.Id == id);
+                return duck;
             } else if (name != null)
             {
-                duck = _db.Ducks.Single(d => d.Name == name);
+                Duck duck = _db.Ducks.Single(d => d.Name == name);
+                return duck;
             } else if (genus != null && species != null)
             {
-                duck = _db.Ducks.Single(d => d.Genus == genus);
+                Duck duck = _db.Ducks.Single(d => d.Genus == genus);
+                return duck;
             } else
             {
                 return BadRequest("You need to provide an id, name or genus and species");
-            }
+            }           
+
             
-
-            _logger.LogTrace($"Getting quackers: {duck.Name} - {duck.Description}");
-
-            return duck;
         }
 
         [HttpPut(Name = "AddDuck")]
@@ -66,8 +67,7 @@ namespace DuckApi.Controllers
             dbduck.Description = duck.Description ?? dbduck.Description;
             dbduck.LastModified = DateTime.Now;
 
-
-            _logger.LogTrace($"Going quackers: {duck.Name} - {duck.Description}");
+            _logger.LogTrace($"No fowl play here: {duck.Name} - {duck.Description}");
 
             _db.SaveChanges();
 
@@ -79,7 +79,7 @@ namespace DuckApi.Controllers
         {
             var duck = _db.Ducks.Single(d => d.Id == id);
 
-            _logger.LogTrace($"Get the duck outta here: {duck.Name} - {duck.Description}");
+            _logger.LogTrace($"Get the duck outta here: #{id} - Name: {duck.Name} Description: {duck.Description}");
 
             _db.Ducks.Remove(duck);
             _db.SaveChanges();
