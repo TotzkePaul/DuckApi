@@ -17,9 +17,23 @@ namespace DuckApi.Controllers
         }
 
         [HttpGet(Name = "GetDuck")]
-        public Duck Get(string kind)
+        public ActionResult<Duck> Get(int? id, string? name, string? genus, string? species)
         {
-            var duck  = _db.Ducks.Single(d => d.Name == kind);
+            Duck duck;
+            if (id != null)
+            {
+                duck = _db.Ducks.Single(d => d.Id == id);
+            } else if (name != null)
+            {
+                duck = _db.Ducks.Single(d => d.Name == name);
+            } else if (genus != null && species != null)
+            {
+                duck = _db.Ducks.Single(d => d.Genus == genus);
+            } else
+            {
+                return BadRequest("You need to provide an id, name or genus and species");
+            }
+            
 
             _logger.LogTrace($"Getting quackers: {duck.Name} - {duck.Description}");
 
@@ -27,7 +41,7 @@ namespace DuckApi.Controllers
         }
 
         [HttpPut(Name = "AddDuck")]
-        public Duck Put(Duck duck)
+        public ActionResult<Duck> Put(Duck duck)
         {
             _logger.LogTrace($"Going quackers: {duck.Name} - {duck.Description}");
 
@@ -42,7 +56,7 @@ namespace DuckApi.Controllers
         }
 
         [HttpPost(Name = "UpdateDuck")]
-        public Duck Post(Duck duck)
+        public ActionResult<Duck> Post(Duck duck)
         {
             var dbduck = _db.Ducks.Single(d => d.Id == duck.Id);
 
@@ -61,7 +75,7 @@ namespace DuckApi.Controllers
         }
 
         [HttpDelete(Name = "DeleteDuck")]
-        public Duck Delete(int id)
+        public ActionResult<Duck> Delete(int id)
         {
             var duck = _db.Ducks.Single(d => d.Id == id);
 
