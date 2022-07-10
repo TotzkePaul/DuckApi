@@ -23,10 +23,23 @@ namespace DuckApi.Controllers
 
             var ducks = _db.Ducks
                .Skip(pagination.StartAt)
-               .Take(pagination.PageSize)
-               .ToList();
+               .Take(pagination.PageSize);
 
-            return ducks;
+            switch (pagination.SortBy)
+            {
+                case "date_desc":
+                    ducks = ducks.OrderByDescending(d => d.CreateDate);
+                    break;
+                case "date_asc":
+                    ducks = ducks.OrderBy(d => d.CreateDate);
+                    break;
+                default:
+                    return BadRequest("SortBy can only be date_desc and date_asc");
+            }
+            
+            var results = ducks.ToList();
+
+            return results;
         }
 
         [HttpGet("{id}")]
