@@ -18,6 +18,17 @@ namespace DuckApi.Data
             options.UseSqlServer(Configuration.GetConnectionString("DuckApiDatabase"));
         }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Duck>()
+                .HasIndex(u => u.Name)
+                .IsUnique();
+
+            builder.Entity<Duck>()
+                .HasIndex(p => new { p.Genus, p.Species })
+                .IsUnique(); 
+        }
+
         public DbSet<Duck> Ducks { get; set; }
     }
 }
