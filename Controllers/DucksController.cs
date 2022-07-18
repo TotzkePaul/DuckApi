@@ -1,8 +1,10 @@
 using DuckApi.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DuckApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class DucksController : ControllerBase

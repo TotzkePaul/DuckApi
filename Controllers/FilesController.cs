@@ -3,9 +3,11 @@ using CsvHelper.Configuration;
 using DuckApi.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DuckApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class FilesController : ControllerBase

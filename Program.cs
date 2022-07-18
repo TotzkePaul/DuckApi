@@ -1,6 +1,12 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Identity.Web;
 using DuckApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -33,6 +39,7 @@ app.UseSwaggerUI();
 
 app.UseCors(MyAllowSpecificOrigins);
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
